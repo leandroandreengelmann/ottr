@@ -1,0 +1,24 @@
+{
+    "name": "SISTEM-OTTR",
+    "short_name": "OTTR",
+    "description": "Sistema SaaS multi-tenant para motoristas e gestão de frotas.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#FCFCFD",
+    "theme_color": "#EF6820",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
