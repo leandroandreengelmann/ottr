@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AlertTriangle, ShieldAlert } from "lucide-react";
+import { AlertTriangle, ShieldAlert, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     AlertDialog,
@@ -16,9 +16,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { triggerSOSAction, resolveSOSAction } from "@/app/actions/security";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export function SOSButton() {
+interface SOSButtonProps {
+    className?: string;
+}
+
+export function SOSButton({ className }: SOSButtonProps) {
     const [isLoading, setIsLoading] = React.useState(false);
     const [activeEmergency, setActiveEmergency] = React.useState<string | null>(null);
 
@@ -56,7 +60,7 @@ export function SOSButton() {
     };
 
     return (
-        <div className="absolute bottom-6 right-4 z-50">
+        <div className={cn("absolute z-50", className)}>
             <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <Button

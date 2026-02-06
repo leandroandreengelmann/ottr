@@ -12,7 +12,7 @@ export function RaceTracker() {
     const MIN_INTERVAL_MS = 10000
 
     useEffect(() => {
-        const isActive = state === "EM_DESLOCAMENTO" || state === "EM_CORRIDA" || state === "AGUARDANDO_EMBARQUE"
+        const isActive = state === "EM_DESLOCAMENTO" || state === "EM_CORRIDA"
 
         if (isActive && !isPaused && typeof window !== 'undefined' && 'geolocation' in navigator) {
             watchId.current = navigator.geolocation.watchPosition(

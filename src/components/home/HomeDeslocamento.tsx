@@ -3,13 +3,20 @@
 import React, { useEffect } from "react";
 import {
     Navigation,
-    Clock,
-    MapPin,
-    CheckCircle2,
-    X,
-    ClipboardList,
+    X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useRaceStore } from "@/store/useRaceStore";
 import { GoogleMapComponent } from "./GoogleMapComponent";
 import { SOSButton } from "./SOSButton";
@@ -41,17 +48,17 @@ export function HomeDeslocamento() {
     };
 
     return (
-        <div className="flex flex-col h-full bg-background">
+        <div className="flex flex-col h-full bg-background font-sans">
             {/* Contexto: Mapa Full */}
-            <div className="flex-1 relative w-full overflow-hidden">
+            <div className="flex-1 relative w-full h-full overflow-hidden">
                 <GoogleMapComponent />
 
                 {/* Overlay Gradient para integração */}
-                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background via-background/60 to-transparent pointer-events-none" />
 
                 {/* Status Bar Flutuante */}
                 <div className="absolute top-4 left-4 right-4 z-20">
-                    <div className="bg-blue-600 text-white px-4 py-3 rounded-xl shadow-lg flex items-center justify-between animate-in slide-in-from-top-4 duration-500">
+                    <div className="bg-blue-600/95 backdrop-blur-sm text-white px-4 py-3 rounded-xl shadow-lg flex items-center justify-between animate-in slide-in-from-top-4 duration-500">
                         <div className="flex items-center gap-2.5">
                             <Navigation className="size-5 animate-pulse" />
                             <span className="text-sm font-bold uppercase tracking-wide">
@@ -64,73 +71,76 @@ export function HomeDeslocamento() {
                     </div>
                 </div>
 
-                {/* SOS Button Flutuante */}
-                <SOSButton />
-            </div>
+                {/* Grupo de Ações Inferior (Cancelar, Detalhes, Cheguei) */}
+                <div className="absolute bottom-24 inset-x-0 flex items-center justify-center gap-3 z-40 px-4">
+                    {/* Botão Cancelar (Compacto com Modal) */}
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="size-14 bg-background/80 hover:bg-destructive/10 text-destructive rounded-xl shadow-sm backdrop-blur transition-all"
+                            >
+                                <X className="size-6" />
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Cancelar operação?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Ao cancelar, o deslocamento atual será interrompido e será necessário iniciar o processo novamente.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Continuar operação</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={cancelRace}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
+                                    Cancelar operação
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
 
-            {/* Painel Inferior */}
-            <div className="shrink-0 bg-background border-t border-gray-100 rounded-t-3xl shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.05)] -mt-6 relative z-10">
-                <div className="container px-4 py-6 space-y-6">
+                    {/* Botão Detalhes */}
+                    <Button
+                        variant="ghost"
+                        onClick={() => setInfoOpen(true)}
+                        className="flex-none h-14 px-6 bg-background text-primary hover:bg-gray-50 rounded-xl uppercase font-bold tracking-wide transition-all shadow-sm"
+                    >
+                        Detalhes
+                    </Button>
 
-                    {/* Grid de Métricas */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col items-center justify-center p-3 bg-gray-50 rounded-xl space-y-1">
-                            <Clock className="size-4 text-blue-600" />
-                            <span className="text-lg font-black text-gray-900">{formatTime(elapsedTime)}</span>
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase">Tempo</span>
-                        </div>
-                        <div className="flex flex-col items-center justify-center p-3 bg-gray-50 rounded-xl space-y-1">
-                            <MapPin className="size-4 text-gray-400" />
-                            <span className="text-lg font-black text-gray-900">0,0 km</span>
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase">Distância</span>
-                        </div>
-                    </div>
-
-                    {/* CTA Primário */}
+                    {/* CTA Cheguei no Local (Green/Success) */}
                     <Button
                         onClick={arriveAtPickup}
-                        className="w-full h-14 rounded-xl text-base font-bold uppercase tracking-wide bg-success hover:bg-success/90 text-white transition-all shadow-md shadow-success/20"
+                        className="flex-1 h-14 bg-success text-success-foreground hover:bg-success/90 rounded-xl text-base font-bold uppercase tracking-wide shadow-lg transition-all"
                     >
-                        <CheckCircle2 className="size-5 mr-3" />
-                        Cheguei ao local
+                        Cheguei no local
                     </Button>
+                </div>
 
-                    {/* Ação de Informações Unificada */}
-                    <Button
-                        variant="outline"
-                        onClick={() => setInfoOpen(true)}
-                        className={cn(
-                            "w-full h-12 rounded-xl text-xs font-bold uppercase border-gray-200 hover:bg-gray-50 flex items-center justify-center gap-2 relative overflow-hidden",
-                            hasAllDetails ? "border-success/50 bg-success/5 text-success" : hasAnyDetail ? "border-primary/50 bg-primary/5 text-primary" : "text-gray-600"
-                        )}
-                    >
-                        <ClipboardList className={cn(
-                            "size-4",
-                            hasAllDetails ? "text-success" : hasAnyDetail ? "text-primary" : ""
-                        )} />
-                        Detalhes da Corrida
+                {/* SOS Button Flutuante */}
+                <SOSButton className="bottom-[26rem] right-4" />
 
-                        {hasAnyDetail && !hasAllDetails && (
-                            <span className="absolute top-1.5 right-2 px-1 py-0.5 bg-primary/10 rounded-full flex items-center gap-1">
-                                <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-                            </span>
-                        )}
-                        {hasAllDetails && (
-                            <span className="absolute top-1.5 right-2 px-1 py-0.5 bg-success/10 rounded-full flex items-center gap-1">
-                                <CheckCircle2 className="size-3 text-success" />
-                            </span>
-                        )}
-                    </Button>
+                {/* Painel Inferior: Estatísticas Minimalistas */}
+                <div className="absolute bottom-0 inset-x-0 bg-background/95 backdrop-blur-md pt-2 pb-5 z-50 rounded-t-xl shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)]">
+                    <div className="flex justify-center items-center gap-8">
+                        {/* Distância */}
+                        <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Distância</span>
+                            <span className="text-xl font-black text-gray-900 tracking-tight leading-none">0,0 km</span>
+                        </div>
 
-                    <div className="pt-2">
-                        <Button
-                            onClick={cancelRace}
-                            variant="outline"
-                            className="w-full h-12 rounded-xl text-xs font-bold uppercase tracking-wide border-primary text-primary hover:bg-primary/5 hover:text-primary transition-all"
-                        >
-                            <X className="size-5 mr-2" />
-                            Cancelar deslocamento
-                        </Button>
+                        {/* Divisor Visual Discreto */}
+                        <div className="h-6 w-px bg-gray-200" />
+
+                        {/* Tempo */}
+                        <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Tempo</span>
+                            <span className="text-xl font-black text-gray-900 tracking-tight leading-none">{formatTime(elapsedTime)}</span>
+                        </div>
                     </div>
                 </div>
             </div>

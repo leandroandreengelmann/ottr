@@ -72,92 +72,49 @@ export function HomeEmCorrida() {
                 </div>
 
                 {/* Comando de Voz */}
-                <VoiceControl hintText='"Finalizar com 20 reais no pix" ou "Pausa"' />
+                <VoiceControl
+                    hintText='"Finalizar com 20 reais no pix" ou "Pausa"'
+                    className="bottom-80"
+                />
 
-                {/* SOS Button (Standard Position bottom-6) */}
-                <SOSButton />
-            </div>
+                {/* SOS Button Flutuante (Above Voice) */}
+                <SOSButton className="bottom-[26rem] right-4" />
 
-            {/* Painel Inferior */}
-            <div className="shrink-0 bg-background border-t border-gray-100 rounded-t-3xl shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.05)] -mt-6 relative z-10">
-                <div className="container px-4 py-6 space-y-6">
-
-                    {/* Grid de Métricas */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col items-center justify-center p-3 bg-gray-50 rounded-xl space-y-1">
-                            <Clock className="size-4 text-primary" />
-                            <span className="text-lg font-black text-gray-900">{formatTime(elapsedTime)}</span>
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase">Duração</span>
-                        </div>
-                        <div className="flex flex-col items-center justify-center p-3 bg-gray-50 rounded-xl space-y-1">
-                            <MapPin className="size-4 text-gray-400" />
-                            <span className="text-lg font-black text-gray-900">0,0 km</span>
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase">Percorrido</span>
-                        </div>
-                    </div>
-
-                    {/* CTA Primário */}
+                {/* Botões de Ação Flutuantes (Acima dos dados da corrida) */}
+                <div className="absolute bottom-24 inset-x-0 flex items-center justify-center gap-4 z-40 px-4">
                     <Button
-                        onClick={goToFinalize}
-                        className="w-full h-14 rounded-xl text-base font-bold uppercase tracking-wide bg-primary hover:bg-primary/90 text-white transition-all shadow-md shadow-primary/20"
+                        variant="ghost"
+                        onClick={() => setInfoOpen(true)}
+                        className="flex-1 h-14 bg-background text-primary hover:bg-gray-50 rounded-xl uppercase font-bold tracking-wide transition-all shadow-sm"
                     >
-                        <Flag className="size-5 mr-3 fill-current" />
-                        Finalizar corrida
+                        Detalhes
                     </Button>
 
-                    {/* Ações Secundárias Unificadas */}
-                    <div className="grid grid-cols-2 gap-3">
-                        <Button
-                            onClick={() => setInfoOpen(true)}
-                            variant="outline"
-                            className={cn(
-                                "h-12 rounded-xl text-xs font-bold uppercase border-gray-200 hover:bg-gray-50 relative overflow-hidden",
-                                hasAllDetails ? "border-success/50 bg-success/5 text-success" : hasAnyDetail ? "border-primary/50 bg-primary/5 text-primary" : "text-gray-600"
-                            )}
-                        >
-                            <ClipboardList className={cn(
-                                "size-4 mr-2",
-                                hasAllDetails ? "text-success" : hasAnyDetail ? "text-primary" : ""
-                            )} />
-                            Detalhes
+                    <Button
+                        onClick={goToFinalize}
+                        className="flex-1 h-14 bg-primary text-white hover:bg-primary/90 rounded-xl uppercase font-bold tracking-wide shadow-lg transition-all"
+                    >
+                        Finalizar
+                    </Button>
+                </div>
 
-                            {hasAnyDetail && !hasAllDetails && (
-                                <span className="absolute top-1 right-1 px-1 bg-primary/10 rounded-full">
-                                    <span className="size-1 rounded-full bg-primary animate-pulse inline-block" />
-                                </span>
-                            )}
-                            {hasAllDetails && (
-                                <span className="absolute top-1 right-1 px-1 bg-success/10 rounded-full">
-                                    <CheckCircle2 className="size-2 text-success inline-block" />
-                                </span>
-                            )}
-                        </Button>
-                        <Button
-                            onClick={pauseRace}
-                            variant="outline"
-                            className={cn(
-                                "h-12 rounded-xl text-xs font-bold uppercase border-gray-200 transition-all",
-                                isPaused ? "bg-warning border-warning text-white hover:bg-warning/90 hover:text-white" : "hover:bg-gray-50 text-gray-600"
-                            )}
-                        >
-                            {isPaused ? (
-                                <>
-                                    <Play className="size-4 mr-2 fill-current" />
-                                    Retomar
-                                </>
-                            ) : (
-                                <>
-                                    <Pause className="size-4 mr-2" />
-                                    Pausar
-                                </>
-                            )}
-                        </Button>
-                    </div>
+                {/* Painel Inferior: Estatísticas Minimalistas (Exatamente na base) */}
+                <div className="absolute bottom-0 inset-x-0 bg-background/95 backdrop-blur-md pt-2 pb-5 z-50 rounded-t-xl shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)]">
+                    <div className="flex justify-center items-center gap-8">
+                        {/* Distância */}
+                        <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Percorrido</span>
+                            <span className="text-xl font-black text-gray-900 tracking-tight leading-none">0,0 km</span>
+                        </div>
 
-                    <div className="pt-2 text-center">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-relaxed">
-                            Mantenha o foco. <span className="text-primary">Use comandos de voz</span>.
-                        </p>
+                        {/* Divisor Visual Discreto */}
+                        <div className="h-6 w-px bg-gray-200" />
+
+                        {/* Duração */}
+                        <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Duração</span>
+                            <span className="text-xl font-black text-gray-900 tracking-tight leading-none">{formatTime(elapsedTime)}</span>
+                        </div>
                     </div>
                 </div>
             </div>

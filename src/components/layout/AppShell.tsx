@@ -54,33 +54,12 @@ export function AppShell({
             <header className="shrink-0 z-50 w-full border-b border-gray-100 bg-background shadow-sm">
                 <div className="container px-4 py-3">
                     <div className="flex items-center justify-between">
-                        <div className="flex flex-col">
-                            <button className="flex items-center gap-1.5 text-sm font-bold text-gray-900 data-[state=open]:text-primary transition-colors focus:outline-none">
-                                {activeOperation}
-                                <ChevronDown className="size-4 text-muted-foreground" />
-                            </button>
-                            <div className="flex items-center gap-2 mt-0.5">
-                                <span className={cn(
-                                    "size-2 rounded-full",
-                                    driverStatus === "Livre" ? "bg-success" : "bg-warning"
-                                )} />
-                                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                                    {driverStatus}
-                                </span>
-                            </div>
-                        </div>
+                        <div />
 
                         <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="icon" className="size-9 text-muted-foreground hover:text-primary transition-colors">
-                                <Mic className="size-5" />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="size-9 text-muted-foreground hover:text-foreground transition-colors">
-                                <HelpCircle className="size-5" />
-                            </Button>
-
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="size-9 rounded-full border border-gray-100 bg-gray-50 text-gray-700">
+                                    <Button variant="ghost" size="icon" className="size-9 rounded-full border border-gray-100 bg-background text-primary">
                                         <User className="size-5" />
                                     </Button>
                                 </DropdownMenuTrigger>

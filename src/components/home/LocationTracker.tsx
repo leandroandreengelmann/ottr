@@ -38,8 +38,8 @@ export function LocationTracker() {
                         setCurrentLocation(newPoint);
                         setLocationError(null);
 
-                        // O rastro da rota só em deslocamento/corrida
-                        if (state !== "LIVRE") {
+                        // O rastro da rota só em deslocamento/corrida (não em aguardando embarque)
+                        if (state === "EM_DESLOCAMENTO" || state === "EM_CORRIDA") {
                             if (!lastPointRef.current || hasMovedSignificantly(lastPointRef.current, newPoint)) {
                                 addRoutePoint(newPoint);
                                 lastPointRef.current = newPoint;
