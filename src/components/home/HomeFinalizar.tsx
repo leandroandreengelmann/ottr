@@ -72,7 +72,7 @@ export function HomeFinalizar() {
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto container px-4 py-2 space-y-4 pb-24">
+            <div className="flex-1 overflow-y-auto container px-4 py-2 space-y-4 pb-28">
                 {/* Resumo Clean (3 Colunas) */}
                 <div className="grid grid-cols-3 gap-0 border-b border-gray-100 pb-4">
                     {/* Distância */}
@@ -186,7 +186,7 @@ export function HomeFinalizar() {
             </div>
 
             {/* Footer Fixo */}
-            <div className="shrink-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] bg-white border-t border-gray-100 shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.05)] z-20">
+            <div className="fixed bottom-0 left-0 right-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] bg-background/95 backdrop-blur-sm border-t border-gray-100 shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.05)] z-50">
                 <Button
                     onClick={async () => {
                         setIsSubmitting(true);

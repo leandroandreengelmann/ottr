@@ -72,53 +72,55 @@ export function HomeDeslocamento() {
                 </div>
 
                 {/* Grupo de Ações Inferior (Cancelar, Detalhes, Cheguei) */}
-                <div className="absolute bottom-24 inset-x-4 flex items-center justify-center gap-4 z-40">
-                    {/* Botão Cancelar (Compacto com Modal) */}
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="size-14 bg-background/80 hover:bg-destructive/10 text-destructive rounded-xl shadow-sm backdrop-blur transition-all"
-                            >
-                                <X className="size-6" />
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Cancelar operação?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Ao cancelar, o deslocamento atual será interrompido e será necessário iniciar o processo novamente.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Continuar operação</AlertDialogCancel>
-                                <AlertDialogAction
-                                    onClick={cancelRace}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                <div className="absolute bottom-24 inset-x-0 px-4 z-40 flex items-center justify-center">
+                    <div className="w-full max-w-md min-w-0 flex items-center gap-3">
+                        {/* Botão Cancelar (Compacto com Modal) */}
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-14 w-14 shrink-0 bg-background/80 hover:bg-destructive/10 text-destructive rounded-xl shadow-sm backdrop-blur transition-all"
                                 >
-                                    Cancelar operação
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                                    <X className="size-6" />
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Cancelar operação?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Ao cancelar, o deslocamento atual será interrompido e será necessário iniciar o processo novamente.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Continuar operação</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={cancelRace}
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                        Cancelar operação
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
 
-                    {/* Botão Detalhes */}
-                    <Button
-                        variant="ghost"
-                        onClick={() => setInfoOpen(true)}
-                        className="flex-none h-14 px-6 bg-background text-primary hover:bg-gray-50 rounded-xl uppercase font-bold tracking-wide transition-all shadow-sm"
-                    >
-                        Detalhes
-                    </Button>
+                        {/* Botão Detalhes */}
+                        <Button
+                            variant="ghost"
+                            onClick={() => setInfoOpen(true)}
+                            className="h-14 shrink-0 px-6 bg-background text-primary hover:bg-gray-50 rounded-xl uppercase font-bold tracking-wide transition-all shadow-sm"
+                        >
+                            Detalhes
+                        </Button>
 
-                    {/* CTA Cheguei no Local (Green/Success) */}
-                    <Button
-                        onClick={arriveAtPickup}
-                        className="flex-1 h-14 bg-success text-success-foreground hover:bg-success/90 rounded-xl text-base font-bold uppercase tracking-wide shadow-lg transition-all"
-                    >
-                        Cheguei no local
-                    </Button>
+                        {/* CTA Cheguei no Local (Green/Success) */}
+                        <Button
+                            onClick={arriveAtPickup}
+                            className="h-14 flex-1 min-w-0 bg-success text-success-foreground hover:bg-success/90 rounded-xl text-base font-bold uppercase tracking-wide shadow-lg transition-all"
+                        >
+                            <span className="truncate">Cheguei no local</span>
+                        </Button>
+                    </div>
                 </div>
 
                 {/* SOS Button Flutuante */}
