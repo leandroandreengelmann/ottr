@@ -28,6 +28,7 @@ export function GoogleMapComponent() {
                 center={center}
                 mapId="bf50473b272553"
                 disableDefaultUI={true}
+                gestureHandling="greedy"
                 className="w-full h-full"
             >
                 {/* Marcador do Carro/Motorista - Usando mascote customizado para evitar deprecation do Pin */}
