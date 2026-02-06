@@ -2,20 +2,15 @@
 
 import React from "react";
 import {
-    CheckCircle2,
     Clock,
-    DollarSign,
     CreditCard,
     Banknote,
     QrCode,
-    Receipt,
     User,
-    ChevronRight,
     Wallet,
     ChevronLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { useRaceStore, PaymentMethod } from "@/store/useRaceStore";
 import { cn } from "@/lib/utils";
 import { recordRideAction } from "@/app/actions/rides";
@@ -58,6 +53,46 @@ export function HomeFinalizar() {
         { id: "OUTRO", label: "Outros", icon: Wallet },
     ];
 
+    // Handler de confirmação extraído
+    const handleConfirm = async () => {
+        setIsSubmitting(true);
+        try {
+            const result = await recordRideAction({
+                valor: currentValue || 0,
+                metodo_pagamento: paymentMethod || 'OUTRO',
+                duracao_segundos: raceDuration,
+                distancia_metros: raceDistance,
+                status_pagamento: paymentStatus || 'PAGO',
+                nome_passageiro: passengerName,
+                cpf_passageiro: passengerCPF,
+                telefone_passageiro: passengerPhone,
+                rota: {
+                    displacement: {
+                        duration: displacementDuration,
+                        distance: displacementDistance,
+                        points: displacementRoutePoints
+                    },
+                    race: {
+                        duration: raceDuration,
+                        distance: raceDistance,
+                        points: raceRoutePoints
+                    }
+                }
+            });
+
+            if (result.success) {
+                toast.success("Corrida registrada com sucesso!");
+                confirmCheckout();
+            } else {
+                toast.error(result.error || "Erro ao salvar corrida");
+            }
+        } catch (error) {
+            toast.error("Erro inesperado ao salvar corrida");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <div className="flex flex-col min-h-[100dvh] bg-background font-sans">
             {/* Header Simples */}
@@ -72,7 +107,7 @@ export function HomeFinalizar() {
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto container px-4 py-2 space-y-4 pb-28">
+            <div className="flex-1 overflow-y-auto container px-4 py-2 space-y-4 pb-[max(2rem,env(safe-area-inset-bottom))]">
                 {/* Resumo Clean (3 Colunas) */}
                 <div className="grid grid-cols-3 gap-0 border-b border-gray-100 pb-4">
                     {/* Distância */}
@@ -157,17 +192,21 @@ export function HomeFinalizar() {
                     </div>
                 </div>
 
-                {/* Status */}
-                <div className="space-y-2">
+                {/* Status do Pagamento (sempre visível) */}
+                <div className="space-y-3">
                     <label className="text-xs font-bold text-gray-900">
                         Status do Pagamento
                     </label>
-                    <div className="flex gap-2">
+
+                    {/* Botões de status sempre visíveis */}
+                    <div className="flex gap-3">
                         <Button
                             onClick={() => setPaymentStatus("PAGO")}
                             className={cn(
-                                "flex-1 h-11 rounded-xl text-[10px] font-bold uppercase tracking-wide transition-all shadow-none",
-                                paymentStatus === "PAGO" ? "bg-success text-white hover:bg-success/90" : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                                "flex-1 h-12 rounded-xl text-sm font-bold uppercase tracking-wide transition-all shadow-none",
+                                paymentStatus === "PAGO"
+                                    ? "bg-success text-white hover:bg-success/90"
+                                    : "bg-gray-100 text-gray-600 hover:bg-success/20"
                             )}
                         >
                             Pago Agora
@@ -175,69 +214,46 @@ export function HomeFinalizar() {
                         <Button
                             onClick={() => setPaymentStatus("PENDENTE")}
                             className={cn(
-                                "flex-1 h-11 rounded-xl text-[10px] font-bold uppercase tracking-wide transition-all shadow-none",
-                                paymentStatus === "PENDENTE" ? "bg-warning text-white hover:bg-warning/90" : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                                "flex-1 h-12 rounded-xl text-sm font-bold uppercase tracking-wide transition-all shadow-none",
+                                paymentStatus === "PENDENTE"
+                                    ? "bg-warning text-white hover:bg-warning/90"
+                                    : "bg-gray-100 text-gray-600 hover:bg-warning/20"
                             )}
                         >
                             Pendente (Fiado)
                         </Button>
                     </div>
-                </div>
-            </div>
 
-            {/* Footer Fixo */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] bg-background/95 backdrop-blur-sm border-t border-gray-100 shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.05)] z-50">
-                <Button
-                    onClick={async () => {
-                        setIsSubmitting(true);
-                        try {
-                            const result = await recordRideAction({
-                                valor: currentValue || 0,
-                                metodo_pagamento: paymentMethod || 'OUTRO',
-                                duracao_segundos: raceDuration,
-                                distancia_metros: raceDistance,
-                                status_pagamento: paymentStatus || 'PAGO',
-                                nome_passageiro: passengerName,
-                                cpf_passageiro: passengerCPF,
-                                telefone_passageiro: passengerPhone,
-                                rota: {
-                                    displacement: {
-                                        duration: displacementDuration,
-                                        distance: displacementDistance,
-                                        points: displacementRoutePoints
-                                    },
-                                    race: {
-                                        duration: raceDuration,
-                                        distance: raceDistance,
-                                        points: raceRoutePoints
-                                    }
-                                }
-                            });
+                    {/* Ações finais (aparecem apenas após seleção de status) */}
+                    {paymentStatus && (
+                        <div className="space-y-3 pt-2">
+                            {/* Dica se não selecionou forma de pagamento */}
+                            {!paymentMethod && (
+                                <p className="text-xs text-muted-foreground text-center">
+                                    Selecione a forma de pagamento acima.
+                                </p>
+                            )}
 
-                            if (result.success) {
-                                toast.success("Corrida registrada com sucesso!");
-                                confirmCheckout();
-                            } else {
-                                toast.error(result.error || "Erro ao salvar corrida");
-                            }
-                        } catch (error) {
-                            toast.error("Erro inesperado ao salvar corrida");
-                        } finally {
-                            setIsSubmitting(false);
-                        }
-                    }}
-                    disabled={!paymentMethod || isSubmitting}
-                    className="w-full h-14 rounded-xl bg-primary hover:bg-primary/90 text-white text-base font-bold uppercase tracking-wide shadow-lg shadow-primary/20"
-                >
-                    {isSubmitting ? (
-                        <>
-                            <Clock className="size-5 mr-2 animate-spin" />
-                            Salvando...
-                        </>
-                    ) : (
-                        "CONCLUIR CORRIDA"
+                            {/* Botões CANCELAR / CONFIRMAR */}
+                            <div className="flex gap-3">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => setPaymentStatus(null)}
+                                    className="flex-1 h-12 rounded-xl text-sm font-bold uppercase tracking-wide border-destructive/30 text-destructive hover:bg-destructive/10"
+                                >
+                                    CANCELAR
+                                </Button>
+                                <Button
+                                    onClick={handleConfirm}
+                                    disabled={!paymentMethod || isSubmitting}
+                                    className="flex-1 h-12 rounded-xl bg-primary hover:bg-primary/90 text-white text-sm font-bold uppercase tracking-wide shadow-lg shadow-primary/20"
+                                >
+                                    {isSubmitting ? "Salvando..." : "CONFIRMAR"}
+                                </Button>
+                            </div>
+                        </div>
                     )}
-                </Button>
+                </div>
             </div>
         </div>
     );
