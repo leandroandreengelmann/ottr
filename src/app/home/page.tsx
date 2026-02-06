@@ -8,6 +8,7 @@ import { HomeAguardandoEmbarque } from "@/components/home/HomeAguardandoEmbarque
 import { HomeEmCorrida } from "@/components/home/HomeEmCorrida";
 import { HomeFinalizar } from "@/components/home/HomeFinalizar";
 import { HomeDefinirValor } from "@/components/home/HomeDefinirValor";
+import { HomeRecibo } from "@/components/home/HomeRecibo";
 import { useRaceStore } from "@/store/useRaceStore";
 import { GoogleMapsProvider } from "@/components/providers/GoogleMapsProvider";
 import { RaceTracker } from "@/components/home/RaceTracker";
@@ -28,6 +29,8 @@ export default function HomePage() {
                 return <HomeFinalizar />;
             case "DEFINIR_VALOR":
                 return <HomeDefinirValor />;
+            case "RECIBO":
+                return <HomeRecibo />;
             default:
                 return <HomeLivre />;
         }

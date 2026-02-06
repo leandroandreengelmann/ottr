@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type RaceState = "LIVRE" | "EM_DESLOCAMENTO" | "AGUARDANDO_EMBARQUE" | "EM_CORRIDA" | "FINALIZANDO" | "DEFINIR_VALOR";
+export type RaceState = "LIVRE" | "EM_DESLOCAMENTO" | "AGUARDANDO_EMBARQUE" | "EM_CORRIDA" | "FINALIZANDO" | "DEFINIR_VALOR" | "RECIBO";
 export type PaymentMethod = "PIX" | "DINHEIRO" | "CARTAO" | "OUTRO" | "CREDITO" | "DEBITO" | null;
 export type PaymentStatus = "PAGO" | "PENDENTE" | null;
 
@@ -55,6 +55,7 @@ interface RaceStore {
     currentValue: number | null;
     paymentMethod: PaymentMethod;
     paymentStatus: PaymentStatus;
+    lastRideId: string | null;
 
     // Actions
     startDeslocamento: () => void;
@@ -77,6 +78,8 @@ interface RaceStore {
     addRoutePoint: (point: { lat: number; lng: number }) => void;
     goToSetValue: () => void;
     confirmCheckout: () => void;
+    goToReceipt: (rideId: string) => void;
+    startNewRide: () => void;
 }
 
 export const useRaceStore = create<RaceStore>()(
@@ -107,6 +110,7 @@ export const useRaceStore = create<RaceStore>()(
             currentValue: null,
             paymentMethod: null,
             paymentStatus: "PAGO",
+            lastRideId: null,
 
             startDeslocamento: () => set({
                 state: "EM_DESLOCAMENTO",
@@ -224,7 +228,38 @@ export const useRaceStore = create<RaceStore>()(
                 isPaused: false,
                 currentValue: null,
                 paymentMethod: null,
-                paymentStatus: "PAGO"
+                paymentStatus: "PAGO",
+                lastRideId: null
+            }),
+
+            goToReceipt: (rideId: string) => set({
+                state: "RECIBO",
+                lastRideId: rideId
+            }),
+
+            startNewRide: () => set({
+                state: "LIVRE",
+                elapsedTime: 0,
+                routePoints: [],
+                displacementStartTime: null,
+                displacementEndTime: null,
+                displacementDuration: 0,
+                displacementDistance: 0,
+                displacementRoutePoints: [],
+                raceStartTime: null,
+                raceEndTime: null,
+                raceDuration: 0,
+                raceDistance: 0,
+                raceRoutePoints: [],
+                passengerName: "",
+                passengerCPF: "",
+                passengerPhone: "",
+                locationError: null,
+                isPaused: false,
+                currentValue: null,
+                paymentMethod: null,
+                paymentStatus: "PAGO",
+                lastRideId: null
             }),
 
             pauseRace: () => set((s) => ({ isPaused: !s.isPaused })),

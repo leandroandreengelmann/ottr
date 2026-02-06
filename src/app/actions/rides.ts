@@ -15,6 +15,14 @@ export interface RideData {
     rota?: any
 }
 
+export interface DriverProfile {
+    nome: string
+    cpf: string
+    telefone?: string
+    modelo_veiculo?: string
+    placa_veiculo?: string
+}
+
 export async function recordRideAction(data: RideData) {
     const supabase = await createClient()
 
@@ -24,7 +32,7 @@ export async function recordRideAction(data: RideData) {
         return { error: 'Usuário não autenticado' }
     }
 
-    const { error } = await supabase
+    const { data: insertedData, error } = await supabase
         .from('corridas')
         .insert({
             motorista_id: user.id,
@@ -38,6 +46,8 @@ export async function recordRideAction(data: RideData) {
             telefone_passageiro: data.telefone_passageiro,
             rota: data.rota
         })
+        .select('id')
+        .single()
 
     if (error) {
         console.error('Error recording ride:', error)
@@ -45,5 +55,27 @@ export async function recordRideAction(data: RideData) {
     }
 
     revalidatePath('/financeiro')
-    return { success: true }
+    return { success: true, rideId: insertedData.id }
+}
+
+export async function getDriverProfileAction(): Promise<{ data?: DriverProfile; error?: string }> {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+        return { error: 'Usuário não autenticado' }
+    }
+
+    const metadata = user.user_metadata
+
+    return {
+        data: {
+            nome: metadata?.nome || 'Motorista',
+            cpf: metadata?.cpf || '',
+            telefone: metadata?.telefone,
+            modelo_veiculo: metadata?.modelo_veiculo,
+            placa_veiculo: metadata?.placa_veiculo,
+        }
+    }
 }

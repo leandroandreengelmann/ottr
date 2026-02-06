@@ -30,7 +30,7 @@ export function HomeFinalizar() {
         setPaymentMethod,
         paymentStatus,
         setPaymentStatus,
-        confirmCheckout,
+        goToReceipt,
         backToDeslocamento,
         passengerName,
         setPassengerName,
@@ -80,9 +80,9 @@ export function HomeFinalizar() {
                 }
             });
 
-            if (result.success) {
+            if (result.success && result.rideId) {
                 toast.success("Corrida registrada com sucesso!");
-                confirmCheckout();
+                goToReceipt(result.rideId);
             } else {
                 toast.error(result.error || "Erro ao salvar corrida");
             }
