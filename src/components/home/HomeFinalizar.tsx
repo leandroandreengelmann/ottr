@@ -59,7 +59,7 @@ export function HomeFinalizar() {
     ];
 
     return (
-        <div className="flex flex-col h-full bg-background overflow-hidden font-sans">
+        <div className="flex flex-col min-h-[100dvh] bg-background font-sans">
             {/* Header Simples */}
             <div className="shrink-0 pt-4 pb-2 px-4 flex items-center gap-3">
                 <Button variant="ghost" size="icon" className="-ml-2 rounded-full" onClick={() => backToDeslocamento()}>
@@ -72,7 +72,7 @@ export function HomeFinalizar() {
                 </div>
             </div>
 
-            <div className="flex-1 container px-4 py-2 space-y-4">
+            <div className="flex-1 overflow-y-auto container px-4 py-2 space-y-4 pb-24">
                 {/* Resumo Clean (3 Colunas) */}
                 <div className="grid grid-cols-3 gap-0 border-b border-gray-100 pb-4">
                     {/* Distância */}
@@ -109,6 +109,25 @@ export function HomeFinalizar() {
                             className="w-full h-12 bg-white border border-gray-200 rounded-xl pl-10 pr-4 text-lg font-bold text-gray-900 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-gray-300"
                             onChange={(e) => setRaceValue(Number(e.target.value))}
                             value={currentValue || ""}
+                        />
+                    </div>
+                </div>
+
+                {/* Passageiro (movido para cima) */}
+                <div className="space-y-2">
+                    <label className="text-xs font-bold text-gray-900">
+                        Nome do Passageiro
+                    </label>
+                    <div className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-2 shadow-sm px-3 h-12">
+                        <div className="size-8 shrink-0 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 border border-gray-100">
+                            <User className="size-4" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Nome do cliente (opcional)"
+                            className="flex-1 bg-transparent border-none text-sm font-bold text-gray-900 focus:outline-none placeholder:text-gray-300 placeholder:font-normal"
+                            value={passengerName}
+                            onChange={(e) => setPassengerName(e.target.value)}
                         />
                     </div>
                 </div>
@@ -164,29 +183,10 @@ export function HomeFinalizar() {
                         </Button>
                     </div>
                 </div>
-
-                {/* Passageiro */}
-                <div className="space-y-2">
-                    <label className="text-xs font-bold text-gray-900">
-                        Nome do Passageiro
-                    </label>
-                    <div className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-2 shadow-sm px-3 h-12">
-                        <div className="size-8 shrink-0 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 border border-gray-100">
-                            <User className="size-4" />
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Nome do cliente (opcional)"
-                            className="flex-1 bg-transparent border-none text-sm font-bold text-gray-900 focus:outline-none placeholder:text-gray-300 placeholder:font-normal"
-                            value={passengerName}
-                            onChange={(e) => setPassengerName(e.target.value)}
-                        />
-                    </div>
-                </div>
             </div>
 
             {/* Footer Fixo */}
-            <div className="shrink-0 p-4 bg-white border-t border-gray-100 shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.05)] z-20">
+            <div className="shrink-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] bg-white border-t border-gray-100 shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.05)] z-20">
                 <Button
                     onClick={async () => {
                         setIsSubmitting(true);

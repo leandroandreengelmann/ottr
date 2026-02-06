@@ -99,7 +99,7 @@ export function HomeEmCorrida() {
                 </div>
 
                 {/* Painel Inferior: Estatísticas Minimalistas (Exatamente na base) */}
-                <div className="absolute bottom-0 inset-x-0 bg-background/95 backdrop-blur-md pt-2 pb-5 z-50 rounded-t-xl shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)]">
+                <div className="absolute bottom-0 inset-x-0 bg-background/95 backdrop-blur-md pt-2 pb-[max(1.25rem,env(safe-area-inset-bottom))] z-50 rounded-t-xl shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)]">
                     <div className="flex justify-center items-center gap-8">
                         {/* Distância */}
                         <div className="flex flex-col items-center gap-0.5">
